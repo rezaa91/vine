@@ -26,11 +26,23 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/tinyxml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/glm/glm)
 
+# copy assets dir to binary location
+file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
+
 # executable
 message("-- Creating executable")
 add_executable(
     ${PROJECT_NAME} 
     src/main.cpp
+    src/Game.cpp
+    src/EntityManager.cpp
+    src/Entity.cpp
+    src/InputManager.cpp
+    src/components/TransformComponent.cpp
+    src/components/VelocityComponent.cpp
+    src/components/SpriteComponent.cpp
+    src/components/KeyboardInputComponent.cpp
+    src/fsm/GameStates.cpp
 )
 
 target_link_libraries(
