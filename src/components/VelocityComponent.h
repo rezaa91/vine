@@ -12,9 +12,10 @@ namespace Vine {
     public:
         VelocityComponent(int x, int y);
 
+        void setVelocity(glm::vec2 velocity);
         glm::vec2 getVelocity() const;
-        void update(float deltaTime);
-        void render();
+        void update(float deltaTime) override;
+        void render() override;
     };
 };
 

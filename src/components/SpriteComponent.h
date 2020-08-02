@@ -13,9 +13,13 @@ namespace Vine {
         SDL_Renderer& _renderer;
         SDL_Texture* _texture;
         glm::vec2 _position;
+        int _srcX;
+        int _srcY;
         const int _width;
         const int _height;
         const int _numberOfFrames;
+        const int _speed;
+        SDL_RendererFlip _flipped = SDL_FLIP_NONE;
 
         void loadTexture(const std::string filepath);
     public:
@@ -26,11 +30,13 @@ namespace Vine {
             const int y,
             const int width,
             const int height,
-            const int numberOfFrames = 1
+            const int numberOfFrames = 1,
+            const int speed = 100
         );
+        void setFlipped(bool flip);
 
-        void update(float deltaTime);
-        void render();
+        void update(float deltaTime) override;
+        void render() override;
     };
 };
 

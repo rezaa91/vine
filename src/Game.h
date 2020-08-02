@@ -3,8 +3,9 @@
 
 #include "EntityManager.h"
 #include "fsm/GameStates.h"
-#include "InputManager.h"
+#include "input/Input.h"
 #include <string>
+#include <vector>
 #include <SDL2/SDL.h>
 
 namespace Vine {
@@ -15,9 +16,12 @@ namespace Vine {
         SDL_Renderer* _renderer;
         Vine::EntityManager* _entityManager;
         Vine::GameState* _gameState;
-        Vine::InputManager* _inputManager;
+        SDL_Event _event;
         bool _isRunning;
+        bool _isPaused;
         int _lastFrame;
+        std::vector<Vine::Input*> _inputs;
+
     public:
         Game();
         ~Game();
@@ -28,6 +32,9 @@ namespace Vine {
         void handleEvents();
         void update();
         void render();
+
+        void togglePause();
+        void endGame();
     };
 };
 

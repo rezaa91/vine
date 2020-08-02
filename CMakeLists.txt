@@ -14,6 +14,7 @@ project(${PROJECT_NAME} VERSION ${VERSION})
 
 # include directories
 include_directories(
+    ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/vendor/SDL2/includes/
     ${PROJECT_SOURCE_DIR}/vendor/SDL2_Image/includes/
     ${PROJECT_SOURCE_DIR}/vendor/tinyxml
@@ -37,11 +38,13 @@ add_executable(
     src/Game.cpp
     src/EntityManager.cpp
     src/Entity.cpp
-    src/InputManager.cpp
+    src/input/GameInput.cpp
+    src/input/PlayerInput.cpp
     src/components/TransformComponent.cpp
     src/components/VelocityComponent.cpp
     src/components/SpriteComponent.cpp
-    src/components/KeyboardInputComponent.cpp
+    src/components/TileComponent.cpp
+    src/components/ColliderComponent.cpp
     src/fsm/GameStates.cpp
 )
 
