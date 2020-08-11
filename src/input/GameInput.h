@@ -10,8 +10,8 @@ namespace Vine {
     private:
         Vine::Game& _game;
 
-        void onKeyUp(SDL_Keycode key) override;
-        void onKeyDown(SDL_Keycode key) override;
+        void onKeyUp(SDL_Scancode key);
+        void onKeyDown(SDL_Scancode key);
     public:
         GameInput(Vine::Game& game);
         void handleInput(SDL_Event& event) override;

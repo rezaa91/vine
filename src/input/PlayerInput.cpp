@@ -4,72 +4,124 @@
 #include "../components/SpriteComponent.h"
 #include "../Entity.h"
 #include <glm/glm.hpp>
+#include <iostream>
 
 Vine::PlayerInput::PlayerInput(Vine::Entity& player)
     : _player(player)
 {}
 
-void Vine::PlayerInput::onKeyUp(SDL_Keycode key)
+void Vine::PlayerInput::onKeyUp()
 {
     Vine::VelocityComponent& playerVelocityComponent = *_player.getComponent<Vine::VelocityComponent>();
     glm::vec2 playerVelocity = playerVelocityComponent.getVelocity();
 
-    switch (key)
+    if (!_keyboardStates[Vine::Config::KeyboardBindings::SPRINT])
     {
-        case Vine::Config::KeyboardBindings::LEFT:
-        case Vine::Config::KeyboardBindings::RIGHT:
-            playerVelocity.x = 0;
-            break;
-        case Vine::Config::KeyboardBindings::UP:
-        case Vine::Config::KeyboardBindings::DOWN:
-            playerVelocity.y = 0;
-            break;
-        case Vine::Config::KeyboardBindings::JUMP:
-            break;
+        _sprintSpeed = 0;
+    }
+
+    if (!_keyboardStates[Vine::Config::KeyboardBindings::LEFT] &&
+        !_keyboardStates[Vine::Config::KeyboardBindings::RIGHT])
+    {
+        playerVelocity.x = 0;
     }
 
     playerVelocityComponent.setVelocity(playerVelocity);
 }
 
-void Vine::PlayerInput::onKeyDown(SDL_Keycode key)
+void Vine::PlayerInput::onKeyDown()
 {
     Vine::VelocityComponent& playerVelocityComponent = *_player.getComponent<Vine::VelocityComponent>();
     glm::vec2 playerVelocity = playerVelocityComponent.getVelocity();
 
     Vine::SpriteComponent& playerSprite = *_player.getComponent<Vine::SpriteComponent>();
 
-    switch (key)
+    if (_keyboardStates[Vine::Config::KeyboardBindings::SPRINT])
     {
-        case Vine::Config::KeyboardBindings::LEFT:
-            playerVelocity.x = -80;
-            playerSprite.setFlipped(true);
-            break;
-        case Vine::Config::KeyboardBindings::RIGHT:
-            playerVelocity.x = 80;
-            playerSprite.setFlipped(false);
-            break;
-        case Vine::Config::KeyboardBindings::UP:
-            playerVelocity.y = -80;
-            break;
-        case Vine::Config::KeyboardBindings::DOWN:
-            playerVelocity.y = 80;
-            break;
-        case Vine::Config::KeyboardBindings::JUMP:
-            break;
+        _sprintSpeed = 80;
+    }
+
+    if (_keyboardStates[Vine::Config::KeyboardBindings::LEFT])
+    {
+        playerVelocity.x = -80 - _sprintSpeed;
+        playerSprite.setFlipped(true);
+    }
+
+    if (_keyboardStates[Vine::Config::KeyboardBindings::RIGHT])
+    {
+        playerVelocity.x = 80 + _sprintSpeed;
+        playerSprite.setFlipped(false);
+    }
+
+    if (_keyboardStates[Vine::Config::KeyboardBindings::JUMP])
+    {
+
     }
 
     playerVelocityComponent.setVelocity(playerVelocity);
 }
 
+void Vine::PlayerInput::onMouseDown(Vine::MOUSE_BUTTON button)
+{
+    if (button == Vine::MOUSE_BUTTON::LEFT)
+    {
+        std::cout << "Left button down" << std::endl;
+    }
+
+    if (button == Vine::MOUSE_BUTTON::RIGHT)
+    {
+        std::cout << "Right button down" << std::endl;
+    }
+}
+
+void Vine::PlayerInput::onMouseUp(Vine::MOUSE_BUTTON button)
+{
+    if (button == Vine::MOUSE_BUTTON::LEFT)
+    {
+        std::cout << "Left button up" << std::endl;
+    }
+
+    if (button == Vine::MOUSE_BUTTON::RIGHT)
+    {
+        std::cout << "Right button up" << std::endl;
+    }
+}
+
+void Vine::PlayerInput::setMousePosition()
+{
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    _mousePosition = {x, y};
+}
+
+
 void Vine::PlayerInput::handleInput(SDL_Event& event)
 {
-    switch (event.type)
+    setMousePosition();
+    _keyboardStates = SDL_GetKeyboardState(NULL);
+
+    if (event.type == SDL_KEYDOWN)
     {
-        case SDL_KEYUP:
-            onKeyUp(event.key.keysym.sym);
-            break;
-        case SDL_KEYDOWN:
-            onKeyDown(event.key.keysym.sym);
-            break;
+        onKeyDown();
     }
+
+    if (event.type == SDL_KEYUP)
+    {
+        onKeyUp();
+    }
+
+    if (event.type == SDL_MOUSEBUTTONDOWN)
+    {
+        onMouseDown(static_cast<Vine::MOUSE_BUTTON>(event.button.button));
+    }
+
+    if (event.type == SDL_MOUSEBUTTONUP)
+    {
+        onMouseUp(static_cast<Vine::MOUSE_BUTTON>(event.button.button));
+    }
+}
+
+glm::vec2 Vine::PlayerInput::getMousePosition() const
+{
+    return _mousePosition;
 }
