@@ -26,6 +26,8 @@ include_directories(
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/tinyxml)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/spdlog)
 add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/glm/glm)
+add_subdirectory(${PROJECT_SOURCE_DIR}/vendor/googletest)
+add_subdirectory(${PROJECT_SOURCE_DIR}/tests)
 
 # copy assets dir to binary location
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
@@ -38,6 +40,9 @@ add_executable(
     src/Game.cpp
     src/EntityManager.cpp
     src/Entity.cpp
+    src/Map.cpp
+    src/TextureManager.cpp
+    src/CollisionManager.cpp
     src/input/GameInput.cpp
     src/input/PlayerInput.cpp
     src/components/TransformComponent.cpp
